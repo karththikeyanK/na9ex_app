@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:na9ex_app/service/api_client.dart';
 import 'package:na9ex_app/service/ticket_service.dart';
 
 const String BASE_URL = 'http://192.168.8.138:8080/api/v1';

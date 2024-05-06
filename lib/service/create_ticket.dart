@@ -8,32 +8,32 @@ import '../pages/admin/admin_home.dart';
 class CreateTicketActivity {
   Future<void> createTicket(
       BuildContext context,
-      String mobile_number,
+      String mobileNumber,
       String customerName,
       String date,
       String toWhere,
-      int male_count,
-      int female_count,
+      int maleCount,
+      int femaleCount,
       int pickupPointId,
-      String pickup_point,
+      String pickupPoint,
       int dropPointId,
-      String drop_point,
+      String dropPoint,
       String description,
       int customerId) async {
     print(
-        "CreateTicketActivity::createTicket()::Mobile Number: $mobile_number");
+        "CreateTicketActivity::createTicket()::Mobile Number: $mobileNumber");
 
     TicketRequest ticketRequest = TicketRequest(
       ticketNumber: '',
-      maleCount: male_count,
-      femaleCount: female_count,
-      mobileNumber: mobile_number,
+      maleCount: maleCount,
+      femaleCount: femaleCount,
+      mobileNumber: mobileNumber,
       customerName: customerName,
       toWhere: toWhere,
       pickupPointId: pickupPointId,
-      pickupPoint: pickup_point,
+      pickupPoint: pickupPoint,
       dropPointId: dropPointId,
-      dropPoint: drop_point,
+      dropPoint: dropPoint,
       date: DateTime.parse(date),
       status: '',
       userId: USER_ID,

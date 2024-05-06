@@ -24,7 +24,7 @@ class AdminHomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TicketForm()),
+                    MaterialPageRoute(builder: (context) => const TicketForm()),
                   );
                 },
                 style: ButtonStyle(

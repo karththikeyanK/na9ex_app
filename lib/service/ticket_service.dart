@@ -1,8 +1,6 @@
-
 import 'package:flutter/widgets.dart';
 import 'package:na9ex_app/constants.dart';
 import 'package:na9ex_app/service/api_client.dart';
-
 
 class TicketService{
 
