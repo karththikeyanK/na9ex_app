@@ -17,7 +17,7 @@ class TicketFormState extends State<TicketForm> {
   int pickupPointId = 0;
   int dropPointId = 0;
   int customerId = 0;
-  String toWhere = 'Colombo';
+  String toWhere = 'COL->JAF';
   DateTime selectedDate = DateTime.now();
   final TextEditingController mobileNumberController = TextEditingController();
   final TextEditingController customerNameController = TextEditingController();
@@ -77,7 +77,7 @@ class TicketFormState extends State<TicketForm> {
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           value: toWhere,
-                          items: <String>['Colombo', 'Jaffna']
+                          items: <String>['COL->JAF', 'JAF->COL']
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,

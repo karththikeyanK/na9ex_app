@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:na9ex_app/constants.dart';
 
@@ -8,12 +10,12 @@ import 'api_client.dart';
 class LoginActivity {
 
   Future<void> loginOnClick(BuildContext context, String username, String password) async {
-    print("LoginActivity::LoginClick()::Username: $username");
+    log("NA9EX::LoginActivity::LoginClick()::Username: $username");
     var authenticationRequest = AuthenticationRequest(
       email: username,
       password: password,
     );
-    print("LoginActivity::LoginClick()::Email: ${authenticationRequest.email}");
+    log("NA9EX::LoginActivity::LoginClick()::Email: ${authenticationRequest.email}");
     try {
       var loginResponse = await ApiClient().login(context, authenticationRequest);
       if (loginResponse.data.role == 'ADMIN') {
@@ -23,7 +25,7 @@ class LoginActivity {
         );
       }
     } catch (e) {
-      print("LoginActivity::LoginClick()::Login failed with exception: $e");
+      log("NA9EX::LoginActivity::LoginClick()::Login failed with exception: $e");
       showCustomAlert(context, "Sever Error", "Please wait for a moment.", "error");
     }
   }

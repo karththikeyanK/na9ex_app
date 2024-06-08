@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:na9ex_app/constants.dart';
 import 'package:na9ex_app/service/api_client.dart';
@@ -20,7 +22,7 @@ class CreateTicketActivity {
       String dropPoint,
       String description,
       int customerId) async {
-    print(
+    log(
         "CreateTicketActivity::createTicket()::Mobile Number: $mobileNumber");
 
     TicketRequest ticketRequest = TicketRequest(
@@ -45,7 +47,7 @@ class CreateTicketActivity {
       var ticketResponse =
           await ApiClient().createTicket(context, ticketRequest);
       if (ticketResponse.msg.isNotEmpty) {
-        print("create_ticket::createTicket()::${ticketResponse.msg}");
+        log("create_ticket::createTicket()::${ticketResponse.msg}");
         showConformationDialog(context, "WARNING", ticketResponse.msg, ticketResponse.id)
             .then((_) {
           Navigator.of(context).push(
@@ -53,7 +55,7 @@ class CreateTicketActivity {
           );
         });
       } else {
-        print(
+        log(
             "create_ticket::createTicket()::Ticket created successfully.");
         showCustomAlert(
                 context, "SUCCESS", "Ticket created successfully.", "success")
@@ -64,7 +66,7 @@ class CreateTicketActivity {
         });
       }
     } catch (e) {
-      print(
+      log(
           "create_ticket::createTicket()::exception: $e");
       // showCustomAlert(context, "Sever Error",
       //     "Please wait for a moment & Try again.", "error");

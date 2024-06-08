@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:na9ex_app/pages/admin/admin_home.dart';
 import 'package:na9ex_app/service/ticket_service.dart';
-
-const String BASE_URL = 'http://192.168.8.138:8080/api/v1';
+const String BASE_URL = 'http://192.168.1.27:8080/api/v1';
+// const String BASE_URL = 'http://192.168.8.138:8080/api/v1';
 int USER_ID = 0;
 
 String SUCCESS ="SUCCESS";
@@ -59,9 +60,9 @@ void showSuccessDialog(BuildContext context, String title, String msg) {
 }
 
 
-showConformationDialog(BuildContext context, String title, String msg, int id) {
+showConformationDialog(BuildContext context_, String title, String msg, int id) {
   showDialog(
-    context: context,
+    context: context_,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(
@@ -75,15 +76,23 @@ showConformationDialog(BuildContext context, String title, String msg, int id) {
             onPressed: () async {
               Navigator.of(context).pop();
               // await Future.delayed(Duration(milliseconds: 500)); // Add a delay
-              TicketService().onClickUpdateStatus(context, id, 1);
+              TicketService().onClickUpdateStatus(context_, id, 1);
+            },
+          ),
+          TextButton(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              // await Future.delayed(Duration(milliseconds: 500)); // Add a delay
+              TicketService().onClickedDelete(context_, id);
             },
           ),
           TextButton(
             child: const Text('Cancel'),
             onPressed: () async {
-              Navigator.of(context).pop();
-              // await Future.delayed(Duration(milliseconds: 500)); // Add a delay
-              TicketService().onClickedDelete(context, id);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AdminHomePage()),
+              );
             },
           ),
         ],
