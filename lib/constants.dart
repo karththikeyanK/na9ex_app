@@ -8,6 +8,9 @@ int USER_ID = 0;
 String SUCCESS ="SUCCESS";
 String WARNING = "WARNING";
 
+const int STATUS_OK = 200;
+const int STATUS_NOT_FOUND = 404;
+
 Future<bool?> showCustomAlert(BuildContext context, String heading, String msg, String type) {
   return showDialog<bool>(
     context: context,

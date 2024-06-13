@@ -1,18 +1,15 @@
-
-
 class LoginResponse {
   final String status;
   final String msg;
-  final AuthData data;
+  final AuthData? data;
 
-
-  LoginResponse({required this.status, required this.msg, required this.data});
+  LoginResponse({required this.status, required this.msg, this.data});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
       status: json['status'],
       msg: json['msg'],
-      data: AuthData.fromJson(json['data']),
+      data: json['data'] != null ? AuthData.fromJson(json['data']) : null,
     );
   }
 }

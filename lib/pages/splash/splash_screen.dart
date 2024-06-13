@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:na9ex_app/pages/login_page.dart';
+import 'package:na9ex_app/pages/pin_screen.dart';
+
+import '../../service/utills/pin_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,15 +18,31 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
+    checkLoginStatus();
+  }
 
-    Future.delayed(const Duration(seconds: 2),(){
+  Future<void> checkLoginStatus() async {
+    if(await isLoggedIn()){
+      Future.delayed(const Duration(seconds: 2),()
+      {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const PinEntryScreen(),
+          ),
+        );
+      }
+      );
+    }
+    else{
+      Future.delayed(const Duration(seconds: 2),(){
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_)=> LoginPage(),
           ),
         );
       }
-    );
+      );
+    }
   }
+
 
 
   @override

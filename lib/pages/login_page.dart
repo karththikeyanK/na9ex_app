@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:na9ex_app/service/login_activity.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final LoginActivity loginActivity = LoginActivity();
+  final storage = FlutterSecureStorage();
 
   LoginPage({super.key});
+
+  Future<void> saveCredentials(String username, String password) async {
+    await storage.write(key: 'username', value: username);
+    await storage.write(key: 'password', value: password);
+  }
+
+  Future<void> login(BuildContext context) async {
+    final username = usernameController.text;
+    final password = passwordController.text;
+    bool success = await loginActivity.loginOnClick(context, username, password);
+    if (success) {
+      await saveCredentials(username, password);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // Change to true
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.blue[25],
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -58,10 +74,7 @@ class LoginPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.6,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () => loginActivity.loginOnClick(
-                              context,
-                              usernameController.text,
-                              passwordController.text),
+                          onPressed: () => login(context),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 const Color(0xFF074173)),
@@ -82,7 +95,7 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Expanded(child: Container()), // Add this line to push the content up
+                      Expanded(child: Container()),
                     ],
                   ),
                 ),

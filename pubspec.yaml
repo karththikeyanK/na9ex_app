@@ -43,6 +43,8 @@ dev_dependencies:
     sdk: flutter
 
   intl: ^0.17.0
+  local_auth: ^2.1.0
+  flutter_secure_storage: ^7.0.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -75,6 +77,9 @@ flutter:
      - assets/female.png
      - assets/male.png
      - assets/mw.png
+     - assets/female_w.png
+     - assets/man_w.png
+     - assets/mw_w.png
 
   #   - images/a_dot_ham.jpeg
    uses-material-design: true

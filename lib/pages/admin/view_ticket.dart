@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:na9ex_app/Model/ticket_details.dart';
+import 'package:na9ex_app/service/view_ticket_activity.dart';
 
 class TicketsPage extends StatelessWidget {
   final List<TicketDetails> ticketsDetails;
@@ -35,6 +36,8 @@ class TicketsPage extends StatelessWidget {
           bool isFirstTicketOfMonth = index == 0 || date.month != DateTime.parse(ticketsDetails[index - 1].date).month;
           String dayOfWeek = DateFormat('EEE').format(date);
 
+          bool route = ticket.route == 'JAF->COL';
+
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,141 +54,147 @@ class TicketsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  side: ticket.pending != 0
-                      ? const BorderSide(color: Colors.orange, width: 2)
-                      : BorderSide.none,
-                ),
-                elevation: 5,
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                child: Container(
-                  decoration: BoxDecoration(
+              InkWell(
+                onTap: () {
+                  ViewTicketActivity().viewTicketByDateAndRoute(context, ticket.date, ticket.route);
+                },
+                child:Card(
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
-                    gradient: ticket.pending == 0
-                        ? const LinearGradient(
-                      colors: [
-                        Color(0xFFCD820C),
-                        Color(0xFFFF7043),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                        : null,
-                    color: ticket.pending != 0 ? Colors.white : null,
                   ),
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                      '${DateFormat('dd').format(date)} - $dayOfWeek',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: ticket.pending != 0 ? Colors.black : Colors.white,
-                            ),
-                          ),
-                          Text(
-                            ticket.route,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: ticket.route == 'JAF->COL'
-                                  ? const Color(0xFF880E4F)
-                                  : const Color(0xFF0D274F),
-                            ),
-                          ),
+                  elevation: 5,
+                  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      gradient: route
+                          ? const LinearGradient(
+                        colors: [
+                          Color(0xFFCD820C),
+                          Color(0xFFFF7043),
                         ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                          : const LinearGradient(
+                        colors: [Color(0xFF074173), Color(0xFF507AA6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/male.png'),
-                                width: 20,
-                                height: 20,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${ticket.maleCount}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: ticket.pending != 0 ? Colors.black : Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/female.png'),
-                                width: 20,
-                                height: 20,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${ticket.femaleCount}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: ticket.pending != 0 ? Colors.black : Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Image(
-                                image: AssetImage('assets/mw.png'),
-                                width: 20,
-                                height: 20,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                '${ticket.total}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: ticket.pending != 0 ? Colors.black : Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      if (ticket.pending != 0)
-                        const SizedBox(height: 8),
-                      if (ticket.pending != 0)
+                      color: ticket.pending != 0 ? Colors.white : null,
+                    ),
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Icon(
-                              Icons.warning,
-                              color: Colors.red,
+                            Text(
+                              '${DateFormat('dd').format(date)} - $dayOfWeek',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color:Colors.white,
+                              ),
                             ),
                             Text(
-                              '${ticket.pendingCount} PENDING',
-                              style: const TextStyle(
-                                fontSize: 16,
+                              ticket.route,
+                              style: TextStyle(
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red,
+                                color: ticket.route == 'JAF->COL'
+                                    ? const Color(0xFFA9045D)
+                                    : const Color(0xFFFFFFFF),
                               ),
                             ),
                           ],
                         ),
-                    ],
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                const Image(
+                                  image: AssetImage('assets/man_w.png'),
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${ticket.maleCount}',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Image(
+                                  image: AssetImage('assets/female_w.png'),
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${ticket.femaleCount}',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const SizedBox(
+                                  // image: AssetImage('assets/mw_w.png'),
+                                  width: 40,
+                                  height: 30,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${ticket.total}',
+                                  style: const TextStyle(
+                                    fontSize: 52,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        if (ticket.pending != 0)
+                          const SizedBox(height: 8),
+                        if (ticket.pending != 0)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                Icons.warning,
+                                color: Color(0xFFA20606),
+                              ),
+                              Text(
+                                '${ticket.pendingCount} PENDING',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFA20606),
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              )
             ],
           );
         },
@@ -193,8 +202,3 @@ class TicketsPage extends StatelessWidget {
     );
   }
 }
-
-
-
-
-

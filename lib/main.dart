@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:na9ex_app/pages/pin_screen.dart';
 import 'package:na9ex_app/pages/splash/splash_home.dart';
 
 
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:  const SplashHome(), // Set LoginPage as the home
+      // home:  const SplashHome(), // Set LoginPage as the home
+      home: const SplashHome(),
     );
   }
 }

@@ -3,7 +3,7 @@ class TicketResponse {
   String ticketNumber;
   int? maleCount;
   int? femaleCount;
-  String toWhere;
+  String route;
   int? pickupPointId;
   String? pickupPoint;
   int? dropPointId;
@@ -15,13 +15,14 @@ class TicketResponse {
   DateTime createdAt;
   int issuerId;
   String msg;
+  bool isChecked;
 
   TicketResponse({
     required this.id,
     required this.ticketNumber,
     required this.maleCount,
     required this.femaleCount,
-    required this.toWhere,
+    required this.route,
     required this.pickupPointId,
     required this.pickupPoint,
     required this.dropPointId,
@@ -33,6 +34,7 @@ class TicketResponse {
     required this.createdAt,
     required this.issuerId,
     required this.msg,
+    this.isChecked = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -41,7 +43,7 @@ class TicketResponse {
       'ticketNumber': ticketNumber,
       'maleCount': maleCount,
       'femaleCount': femaleCount,
-      'toWhere': toWhere,
+      'route': route,
       'pickupPointId': pickupPointId,
       'pickupPoint': pickupPoint,
       'dropPointId': dropPointId,
@@ -62,7 +64,7 @@ class TicketResponse {
       ticketNumber: json['ticketNumber'],
       maleCount: json['maleCount'],
       femaleCount: json['femaleCount'],
-      toWhere: json['toWhere'],
+      route: json['route'],
       pickupPointId: json['pickupPointId'],
       pickupPoint: json['pickupPoint'],
       dropPointId: json['dropPointId'],
@@ -74,6 +76,7 @@ class TicketResponse {
       createdAt: DateTime.parse(json['createdAt']),
       issuerId: json['issuerId'],
       msg: json['msg'],
+      isChecked: false,
     );
   }
 }
