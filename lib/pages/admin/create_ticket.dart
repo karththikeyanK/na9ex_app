@@ -26,7 +26,7 @@ class TicketFormState extends State<TicketForm> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateController =
       TextEditingController(text: DateTime.now().toString().split(' ')[0]);
-  int currentPageIndex = 0;
+  int currentPageIndex = 1;
 
   bool isError = false;
 
@@ -70,6 +70,15 @@ class TicketFormState extends State<TicketForm> {
                       }
                       return null;
                     },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: customerNameController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Customer Name',
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Row(

@@ -26,7 +26,7 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       Future.delayed(const Duration(seconds: 2),()
       {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const PinEntryScreen(),
+          MaterialPageRoute(builder: (_) => const PinEntryScreen("Enter"),
           ),
         );
       }
@@ -42,8 +42,6 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       );
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {

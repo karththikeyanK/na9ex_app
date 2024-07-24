@@ -1,10 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:na9ex_app/service/login_activity.dart';
 
 class PinEntryScreen extends StatefulWidget {
-  const PinEntryScreen({super.key});
+  final String mode;
+
+  const PinEntryScreen(this.mode, {super.key});
+
 
   @override
   PinEntryScreenState createState() => PinEntryScreenState();
@@ -13,22 +14,32 @@ class PinEntryScreen extends StatefulWidget {
 class PinEntryScreenState extends State<PinEntryScreen> {
   final List<TextEditingController> _pinControllers = List<TextEditingController>.generate(4, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List<FocusNode>.generate(4, (index) => FocusNode());
-
+  final List<int> pin = <int>[];
+  final LoginActivity loginActivity = LoginActivity();
   @override
   void initState() {
     super.initState();
+
     // Request focus on the first TextField when the page opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_focusNodes[0]);
     });
   }
 
+
   void _onKeyPressed(String key) {
     for (int i = 0; i < 4; i++) {
       if (_pinControllers[i].text.isEmpty) {
-        _pinControllers[i].text = key;
+        if(widget.mode =="Enter"){
+          _pinControllers[i].text = "*";
+        }else{
+          _pinControllers[i].text = key;
+        }
+        pin.add(int.parse(key));
         if (i < 3) {
           FocusScope.of(context).requestFocus(_focusNodes[i + 1]);
+        }else if(widget.mode == "Enter"){
+          loginActivity.pinAction(context, pin.join(),widget.mode);
         }
         break;
       }
@@ -38,6 +49,7 @@ class PinEntryScreenState extends State<PinEntryScreen> {
   void _onDeletePressed() {
     for (int i = 3; i >= 0; i--) {
       if (_pinControllers[i].text.isNotEmpty) {
+        pin.removeLast();
         _pinControllers[i].clear();
         FocusScope.of(context).requestFocus(_focusNodes[i]);
         break;
@@ -70,9 +82,9 @@ class PinEntryScreenState extends State<PinEntryScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Please enter your 4-digit PIN',
-              style: TextStyle(
+            Text(
+              'Please ${widget.mode} PIN',
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF074173),
@@ -91,8 +103,8 @@ class PinEntryScreenState extends State<PinEntryScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  String enteredPin = _pinControllers.map((controller) => controller.text).join();
-                  log("Entered PIN: $enteredPin");
+                  String enteredPin = pin.join();
+                  loginActivity.pinAction(context, enteredPin,widget.mode);
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF074173)),
@@ -108,6 +120,20 @@ class PinEntryScreenState extends State<PinEntryScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+            if(widget.mode == "Enter")
+              TextButton(
+                onPressed: () {
+                  loginActivity.forgotPin(context);
+                },
+                child: const Text(
+                  'Forgot PIN?',
+                  style: TextStyle(
+                    color: Color(0xFF074173),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -184,4 +210,6 @@ class PinEntryScreenState extends State<PinEntryScreen> {
       ),
     );
   }
+
+
 }

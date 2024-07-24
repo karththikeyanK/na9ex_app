@@ -1,5 +1,7 @@
-// admin_nav.dart
 import 'package:flutter/material.dart';
+import 'package:na9ex_app/pages/admin/admin_home.dart';
+import 'package:na9ex_app/pages/admin/create_ticket.dart';
+import '../pages/admin/admin_settings.dart';
 
 class AdminNavBar extends StatelessWidget {
   final int currentPageIndex;
@@ -13,29 +15,55 @@ class AdminNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      onDestinationSelected: onDestinationSelected,
-      indicatorColor: Colors.amber,
-      backgroundColor: const Color(0xFF074173),
-      selectedIndex: currentPageIndex,
-      destinations: const <Widget>[
-        NavigationDestination(
-          selectedIcon: Icon(Icons.home,color:Colors.white,),
-          icon: Icon(Icons.home_outlined,color:Colors.white),
-          label: 'Home',
+    return NavigationBarTheme(
+      data: NavigationBarThemeData(
+        indicatorColor: Colors.amber,
+        backgroundColor: const Color(0xFF074173),
+        labelTextStyle: MaterialStateProperty.all(
+          const TextStyle(color: Colors.white),
         ),
-        NavigationDestination(
-          icon: Badge(child: Icon(Icons.notifications_sharp,color:Colors.white)),
-          label: 'Notifications',
-        ),
-        NavigationDestination(
-          icon: Badge(
-            label: Text('2'),
-            child: Icon(Icons.messenger_sharp,color:Colors.white),
+      ),
+      child: NavigationBar(
+        onDestinationSelected: (int index) {
+          onDestinationSelected(index);
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminHomePage()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TicketForm()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+              break;
+          }
+        },
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home, color: Colors.white),
+            icon: Icon(Icons.home_outlined, color: Colors.white),
+            label: 'Home',
           ),
-          label: 'Messages',
-        ),
-      ],
+          NavigationDestination(
+            icon: Icon(Icons.article, color: Colors.white),
+            label: 'Tickets',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings, color: Colors.white),
+            label: 'Settings',
+          ),
+        ],
+      ),
     );
   }
 }

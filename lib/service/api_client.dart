@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ui';
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,12 +23,16 @@ class ApiClient {
     log("ApiClient::setToken()::Token setting successful");
   }
 
-  Future<http.Response> postRequest(String url, Map<String, dynamic> body) async {
-    return await http.post(
+  Future<http.Response> postRequest(BuildContext context,String url, Map<String, dynamic> body) async {
+    log("ApiClient::postRequest()::url: $url");
+    showLoading(context);
+    var response =  await http.post(
       Uri.parse(url),
       headers: {'Authorization': 'Bearer $token'},
       body: jsonEncode(body),
     );
+    hideLoading(context);
+    return response;
   }
 
   static Future<http.Response> get(String url) async {
@@ -39,55 +43,64 @@ class ApiClient {
   }
 
   Future<LoginResponse> login(BuildContext context, AuthenticationRequest authenticationRequest) async {
-    log("ApiClient::login()::start");
     var url = '$BASE_URL/auth/authenticate';
     log(url);
-    try{
+    try {
+      showLoading(context);
       var response = await http.post(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(authenticationRequest.toJson()),
-      );
+      ).timeout(const Duration(seconds: 5));
+      hideLoading(context);
+      await Future.delayed(const Duration(milliseconds: 500));
       var data = jsonDecode(response.body);
-      if(response.body!=null){
+      if (response.statusCode == OK && data != null) {
         var loginResponse = LoginResponse.fromJson(data);
         if (loginResponse.status == 'SUCCESS' && loginResponse.data != null) {
-          log("ApiClient::login()::Login successful with user id: ${loginResponse.data!.id}");
           ApiClient.setToken(loginResponse.data!.token);
-          USER_ID= loginResponse.data!.id;
+          USER_ID = loginResponse.data!.id;
           return loginResponse;
-        } else if(loginResponse.status == 'ERROR' && loginResponse.msg == 'Invalid credentials'){
-          log("ApiClient::login()::Login failed");
-          showCustomAlert(context, "Login Failed", "Check your user name or password and try again.", "error");
-          throw Exception('Invalid credentials');
-        } else {
-          log("ApiClient::login()::Login failed");
-          showCustomAlert(context, "Login Failed", "Try again.", "error");
-          throw Exception('Login failed');
         }
-      }else{
-        log("ApiClient::login()::Network Error");
-        showCustomAlert(context, "Login Failed", "Network Error", "error");
-        throw Exception('Network Error');
       }
-    }catch(e){
-      log("ApiClient::login()::Exception::${e.toString()}");
-      if(e is http.ClientException){
-        showCustomAlert(context, "Login Failed", "Network Error", "error");
-        log("ApiClient::login()::ClientException::${e.message}");
-      }else if(e.toString()=="Invalid credentials"){
+      if (response.statusCode == BAD_REQUEST && data['status'] == 'ERROR' &&
+          data['msg'] == 'Invalid credentials') {
+        await showCustomAlert(context, "Invalid Credentials",
+            "Please check the username and password", "error");
         throw Exception('Invalid credentials');
+      } else {
+        await showCustomAlert(context, "Login Failed", "Try Again!", "error");
+        throw Exception('Login failed');
       }
-      throw Exception('Network Error');
+      // } on TimeoutException {
+      //   hideLoading(context);
+      //   await showCustomAlert(context, "Login Failed", "Timeout/Try Again!", "error");
+      //   throw Exception('Login failed');
+      // }
+    }catch(e){
+      if(e is TimeoutException){
+        log("ApiClient::Login::TimeoutException::${e.message}");
+        hideLoading(context);
+        await showCustomAlert(context, "Login Failed", "Timeout/Try Again!", "error");
+        throw Exception('Login failed');
+      } else if(e is http.ClientException){
+        log("ApiClient::Login::ClientException::${e.message}");
+        hideLoading(context);
+        await showCustomAlert(context, "Login Failed", "Network Error..Try Again!", "error");
+        throw Exception('Login failed');
+      } else {
+        log("ApiClient::Login::Exception::${e.toString()}");
+        throw Exception('Login failed');
+      }
     }
-
-
   }
+
 
   Future<TicketResponse> createTicket(BuildContext context, TicketRequest ticketRequest) async {
     log("ApiClient::createTicket()::start");
     var url = '$BASE_URL/ticket/create';
     log(url);
+    showLoading(context);
     var response = await client.post(
       Uri.parse(url),
       headers: {
@@ -95,9 +108,12 @@ class ApiClient {
         "Authorization": "Bearer $token",
       },
       body: jsonEncode(ticketRequest.toJson()),
-    );
+    ).timeout(Duration(seconds: 5));
+    hideLoading(context);
+    await Future.delayed(const Duration(seconds: 1));
+
     log("Response Status code ${response.statusCode}");
-    if (response.statusCode == 200) {
+    if (response.statusCode == OK) {
       log("ApiClient::creteTicket():: getting response success");
       var data = jsonDecode(response.body);
       var ticketResponse = TicketResponse.fromJson(data['data']); // Fixed line
@@ -130,7 +146,7 @@ class ApiClient {
         },
       );
       log("Response Status code ${response.statusCode}");
-      if (response.statusCode == 200) {
+      if (response.statusCode == OK) {
         log("ApiClient::updateStatus():: getting response success");
         var data = jsonDecode(response.body);
         if (data['status'] == 'SUCCESS') {
@@ -168,7 +184,7 @@ class ApiClient {
       },
     );
     log("Response Status code ${response.statusCode}");
-    if (response.statusCode == 200) {
+    if (response.statusCode == OK) {
       log("ApiClient::deleteTicket():: getting response success");
       var data = jsonDecode(response.body);
       if (data['status'] == 'SUCCESS') {
@@ -199,7 +215,7 @@ class ApiClient {
       },
     );
     log("Response Status code ${response.statusCode}");
-    if (response.statusCode == 200) {
+    if (response.statusCode == OK) {
       log("ApiClient::getTicketDetails():: getting response success");
       var data = jsonDecode(response.body);
       var ticketList = data['data'] as List;
@@ -226,7 +242,7 @@ class ApiClient {
       },
     );
     log("Response Status code ${response.statusCode}");
-    if (response.statusCode == 200) {
+    if (response.statusCode == OK) {
       log("ApiClient::getTicketDetailsByDateAndRoute():: getting response success");
       var data = jsonDecode(response.body);
       var ticketList = data['data'] as List;
@@ -237,6 +253,10 @@ class ApiClient {
       showCustomAlert(context, "Network/Server Error", "Check your internet connection and try again.", "error");
       throw Exception('Network error');
     }
+  }
+
+  checkNetwork() {
+    return true;
   }
 
 

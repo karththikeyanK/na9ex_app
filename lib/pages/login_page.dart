@@ -6,22 +6,16 @@ class LoginPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final LoginActivity loginActivity = LoginActivity();
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
 
   LoginPage({super.key});
 
-  Future<void> saveCredentials(String username, String password) async {
-    await storage.write(key: 'username', value: username);
-    await storage.write(key: 'password', value: password);
-  }
 
   Future<void> login(BuildContext context) async {
     final username = usernameController.text;
     final password = passwordController.text;
     bool success = await loginActivity.loginOnClick(context, username, password);
-    if (success) {
-      await saveCredentials(username, password);
-    }
+
   }
 
   @override

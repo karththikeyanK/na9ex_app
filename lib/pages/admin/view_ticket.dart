@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:na9ex_app/Model/ticket_details.dart';
+import 'package:na9ex_app/components/AdminNavBar.dart';
 import 'package:na9ex_app/service/view_ticket_activity.dart';
 
-class TicketsPage extends StatelessWidget {
+class TicketsPage extends StatefulWidget {
   final List<TicketDetails> ticketsDetails;
 
-  TicketsPage({super.key, required this.ticketsDetails}) {
-    ticketsDetails.sort((a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
-  }
+  const TicketsPage({super.key, required this.ticketsDetails});
 
+  @override
+  TicketsPageState createState() => TicketsPageState();
+}
+
+class TicketsPageState extends State<TicketsPage> {
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    widget.ticketsDetails.sort((a, b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+
+    var ticketsDetails = widget.ticketsDetails;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tickets'),
-        backgroundColor: const Color(0xFF074173),
-        foregroundColor: Colors.white,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Tickets'),
+      //   backgroundColor: const Color(0xFF074173),
+      //   foregroundColor: Colors.white,
+      // ),
       body: ListView.builder(
         itemCount: ticketsDetails.length,
         itemBuilder: (context, index) {
@@ -197,6 +205,14 @@ class TicketsPage extends StatelessWidget {
               )
             ],
           );
+        },
+      ),
+      bottomNavigationBar: AdminNavBar(
+        currentPageIndex: currentPageIndex =1,
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
         },
       ),
     );

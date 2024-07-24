@@ -216,7 +216,7 @@ class TicketsTableState extends State<TicketsTable> {
                         ),
                         Checkbox(
                           value: ticket.ticketResponse.isChecked,
-                          onChanged: (bool? value) {
+                          onChanged: ticket.ticketResponse.status == "PENDING" ? null : (bool? value) {
                             setState(() {
                               ticket.ticketResponse.isChecked = value!;
                               sortTickets();

@@ -10,7 +10,7 @@ class TicketService{
     if(response){
       if(status == 1){
         print("Ticket is Confirmed");
-        showSuccessDialog(context, "SUCCESS","Ticket is Booked");
+        showCustomAlert(context, "SUCCESS","Ticket is Booked","success");
       }else if(status==2){
         print("TicketService::onClickedUpdateStatus()::Ticket Cancelled!");
         showCustomAlert(context, "WARNING", "Ticket Moved to Pending","warning");
@@ -31,7 +31,7 @@ class TicketService{
     bool response = await ApiClient().deleteTicket(context, id);
     if(response){
       print("TicketService()::onClickedDelete():: Ticket Deleted");
-      showSuccessDialog(context, SUCCESS, "Ticket Deleted Successfully");
+      showCustomAlert(context, SUCCESS, "Ticket Deleted Successfully", "success");
     }else{
       print("ERROR OCCURRED");
     }
