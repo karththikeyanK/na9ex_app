@@ -23,10 +23,6 @@ NA9EX_APP is a comprehensive solution developed for a traveling company. It's de
 
 ## Future Enhancements
 
-We're constantly working to improve NA9EX_APP and make it the best it can be for our users. Here are some features we're planning to implement in the future:
-
-- **Real-time updates**: To keep drivers updated with the latest booking information.
-- **Customer feedback system**: To gather valuable feedback and improve our services.
-- **Advanced analytics**: To provide insights into operations and help make data-driven decisions.
+i'm constantly working to improve NA9EX_APP and make it the best it can be for drivers using google map api to ease to find short route for pickup location and drop location and also plan to develop the app for cutomers also.
 
 Stay tuned for these exciting updates!
